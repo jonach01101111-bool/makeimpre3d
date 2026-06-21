@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Print & Paint Ledger - Dashboard Senior</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-zone">
+                <span class="icon">🤖</span>
+                <div>
+                    <h1>3D Forge Ledger</h1>
+                    <p class="subtitle">Control de Impresiones & Figuras Pintadas</p>
+                </div>
+            </div>
+            <div class="budget-setup">
+                <label for="initial-balance">Saldo Inicial ($)</label>
+                <input type="number" id="initial-balance" value="1000" min="0" step="any">
+            </div>
+        </header>
+
+        <div id="low-balance-alert" class="alert hidden">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <strong>¡Alerta de Liquidez!</strong> El saldo actual es menor al 10% del saldo inicial.
+            </div>
+        </div>
+
+        <section class="metrics-grid">
+            <div class="metric-card card-income">
+                <h3>Total Ingresos</h3>
+                <p id="total-income">$0.00</p>
+            </div>
+            <div class="metric-card card-expenses">
+                <h3>Total Egresos</h3>
+                <p id="total-expenses">$0.00</p>
+            </div>
+            <div class="metric-card card-utility">
+                <h3>Utilidad Neta</h3>
+                <p id="net-utility">$0.00</p>
+            </div>
+            <div class="metric-card card-balance">
+                <h3>Saldo Disponible</h3>
+                <p id="current-balance">$0.00</p>
+            </div>
+        </section>
+
+        <main class="main-layout">
+            <section class="form-container">
+                <h2>Nuevo Registro</h2>
+                <form id="ledger-form" novalidate>
+                    <div class="form-group">
+                        <label for="type">Tipo de Movimiento</label>
+                        <select id="type" required>
+                            <option value="ingreso">Ingreso (Venta)</option>
+                            <option value="egreso">Egreso (Gasto/Insumos)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Fecha</label>
+                        <input type="date" id="date" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="buy-price">Precio Compra/Costo ($)</label>
+                            <input type="number" id="buy-price" value="0" min="0" step="any">
+                        </div>
+                        <div class="form-group">
+                            <label for="sell-price">Precio Venta/Gasto ($)</label>
+                            <input type="number" id="sell-price" value="0" min="0" step="any" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item-id">N° Lista / SKU Figura</label>
+                        <input type="text" id="item-id" placeholder="Ej: FIG-3D-001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Descripción</label>
+                        <textarea id="description" rows="3" placeholder="Ej: Figura Resina Master Chief Pintada a Mano" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="btn-submit">Guardar Registro</button>
+                </form>
+            </section>
+
+            <section class="table-container">
+                <h2>Historial de Movimientos</h2>
+                <div class="table-wrapper">
+                    <table id="ledger-table">
+                        <thead>
+                            <h3>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Ref/SKU</th>
+                                    <th>Descripción</th>
+                                    <th>P. Compra</th>
+                                    <th>P. Venta</th>
+                                    <th>Utilidad</th>
+                                    <th>Tipo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </h3>
+                        </thead>
+                        <tbody id="ledger-rows">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <section class="chart-container">
+            <h2>Flujo de Caja Dinámico & Movimientos</h2>
+            <div class="chart-wrapper">
+                <canvas id="financialChart"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
