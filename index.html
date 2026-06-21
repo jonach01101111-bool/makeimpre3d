@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creality K2 Matrix - Dashboard Corporativo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fuente premium ultra-limpia -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra de Navegación / Header Superior -->
+        <header class="app-header">
+            <div class="brand-section">
+                <div class="brand-logo">
+                    <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h1>CREALITY K2 <span class="badge-os">PRO OS</span></h1>
+                    <p class="subtitle">Matriz de Finanzas, Insumos y Ventas de Modelos 3D</p>
+                </div>
+            </div>
+            
+            <div class="global-config-card">
+                <div class="config-icon">💰</div>
+                <div class="config-data">
+                    <label for="initial-balance">Caja Inicial de Operaciones</label>
+                    <div class="input-currency-wrapper">
+                        <span>$</span>
+                        <input type="number" id="initial-balance" value="500" min="0" step="any">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Banner de Notificación Crítica -->
+        <div id="low-balance-alert" class="alert-banner hidden">
+            <div class="alert-pulse-icon"></div>
+            <div class="alert-text">
+                <h4>SISTEMA EN RIESGO DE LIQUIDEZ</h4>
+                <p>El saldo disponible ha caído por debajo del límite de seguridad (10% de la caja inicial).</p>
+            </div>
+        </div>
+
+        <!-- Panel de KPIs Financieros -->
+        <section class="kpi-dashboard">
+            <div class="kpi-card income-kpi">
+                <div class="kpi-header">
+                    <span>Ingresos por Ventas</span>
+                    <span class="kpi-mini-icon">📈</span>
+                </div>
+                <p class="kpi-value" id="total-income">$0.00</p>
+                <div class="kpi-progress"><div class="bar"></div></div>
+            </div>
+            <div class="kpi-card expenses-kpi">
+                <div class="kpi-header">
+                    <span>Costos e Insumos</span>
+                    <span class="kpi-mini-icon">📉</span>
+                </div>
+                <p class="kpi-value" id="total-expenses">$0.00</p>
+                <div class="kpi-progress"><div class="bar"></div></div>
+            </div>
+            <div class="kpi-card utility-kpi">
+                <div class="kpi-header">
+                    <span>Utilidad Neta</span>
+                    <span class="kpi-mini-icon">💎</span>
+                </div>
+                <p class="kpi-value" id="net-utility">$0.00</p>
+                <div class="kpi-progress"><div class="bar"></div></div>
+            </div>
+            <div class="kpi-card balance-kpi">
+                <div class="kpi-header">
+                    <span>Flujo de Caja Neto</span>
+                    <span class="kpi-mini-icon">⚡</span>
+                </div>
+                <p class="kpi-value" id="current-balance">$0.00</p>
+                <div class="kpi-progress"><div class="bar"></div></div>
+            </div>
+        </section>
+
+        <!-- Bloque Principal de Trabajo -->
+        <main class="workspace-grid">
+            <!-- Formulario de Control -->
+            <section class="glass-panel form-section">
+                <div class="panel-header">
+                    <span class="accent-dot"></span>
+                    <h2>Registro de Operación Técnica</h2>
+                </div>
+                
+                <form id="ledger-form" novalidate>
+                    <div class="ui-field">
+                        <label for="type">Naturaleza del Flujo</label>
+                        <select id="type" class="ui-select" required>
+                            <option value="ingreso">🟢 Venta de Modelo / Figura</option>
+                            <option value="egreso">🔴 Insumo / Gasto de Producción</option>
+                        </select>
+                    </div>
+
+                    <div class="ui-field" id="category-group">
+                        <label for="category">Categoría Estratégica</label>
+                        <select id="category" class="ui-select">
+                            <option value="Filamento">Material: Filamento (PLA / PETG / CFS)</option>
+                            <option value="Energia">Energía / Amortización de Máquina</option>
+                            <option value="Post-Procesado">Post-Procesado (Pinturas, Resinas)</option>
+                            <option value="Mantenimiento">Mantenimiento y Repuestos</option>
+                        </select>
+                    </div>
+
+                    <div class="ui-row">
+                        <div class="ui-field">
+                            <label for="date">Fecha de Registro</label>
+                            <input type="date" id="date" class="ui-input" required>
+                        </div>
+                        <div class="ui-field">
+                            <label for="item-id">Identificador STL / SKU</label>
+                            <input type="text" id="item-id" class="ui-input" placeholder="K2-SKU-001">
+                        </div>
+                    </div>
+
+                    <div class="ui-row metrics-3d">
+                        <div class="ui-field">
+                            <label for="weight">Consumo Filamento (g)</label>
+                            <div class="input-unit-wrapper">
+                                <input type="number" id="weight" class="ui-input" value="0" min="0">
+                                <span>g</span>
+                            </div>
+                        </div>
+                        <div class="ui-field">
+                            <label for="hours">Tiempo de Impresión (h)</label>
+                            <div class="input-unit-wrapper">
+                                <input type="number" id="hours" class="ui-input" value="0" min="0" step="0.1">
+                                <span>h</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-row">
+                        <div class="ui-field" id="buy-price-wrapper">
+                            <label for="buy-price">Costo de Fabricación</label>
+                            <div class="input-currency-inner">
+                                <span>$</span>
+                                <input type="number" id="buy-price" class="ui-input" value="0" min="0" step="any">
+                            </div>
+                        </div>
+                        <div class="ui-field">
+                            <label id="main-price-label" for="sell-price">Precio de Venta</label>
+                            <div class="input-currency-inner">
+                                <span>$</span>
+                                <input type="number" id="sell-price" class="ui-input" value="0" min="0" step="any" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-field">
+                        <label for="description">Detalles de Manufactura</label>
+                        <textarea id="description" class="ui-textarea" rows="2" placeholder="Ej: Figura articulada, pintada con acrílicos premium..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="ui-btn-submit" id="btn-submit">
+                        <span>Ejecutar Transacción</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Historial Operativo -->
+            <section class="glass-panel list-section">
+                <div class="panel-header">
+                    <span class="accent-dot cyan"></span>
+                    <h2>Historial Operativo de Producción</h2>
+                </div>
+                
+                <div class="table-container-responsive">
+                    <table class="ui-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Modelo/SKU</th>
+                                <th>Detalles de la Orden</th>
+                                <th>Métricas 3D</th>
+                                <th>Monto</th>
+                                <th>Rendimiento</th>
+                                <th>Estado</th>
+                                <th class="text-right">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-rows">
+                            <!-- Datos Inyectados por app.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bloque de Gráficos e Inteligencia Financiera -->
+        <section class="analytics-row">
+            <div class="glass-panel chart-main-box">
+                <div class="panel-header">
+                    <span class="accent-dot blue"></span>
+                    <h2>Fluctuación de Capital Temporal</h2>
+                </div>
+                <div class="canvas-holder">
+                    <canvas id="financialChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="glass-panel chart-secondary-box">
+                <div class="panel-header">
+                    <span class="accent-dot orange"></span>
+                    <h2>Inversión en Insumos</h2>
+                </div>
+                <div class="canvas-holder">
+                    <canvas id="expensesPieChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
