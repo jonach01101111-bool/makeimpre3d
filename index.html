@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creality K2 OS - Taller 3D Analytics</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-zone">
+                <span class="icon">🚀</span>
+                <div>
+                    <h1>Creality K2 Control Hub</h1>
+                    <p class="subtitle">Gestión de Insumos & Ventas de Figuras</p>
+                </div>
+            </div>
+            <div class="budget-setup">
+                <label for="initial-balance">Caja Inicial Sistema ($)</label>
+                <input type="number" id="initial-balance" value="500" min="0" step="any">
+            </div>
+        </header>
+
+        <div id="low-balance-alert" class="alert hidden">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <strong>Alerta Financiera:</strong> Tu caja está por debajo del 10% del dinero inicial. Frena compras de stock.
+            </div>
+        </div>
+
+        <section class="metrics-grid">
+            <div class="metric-card card-income">
+                <h3>Ventas Totales</h3>
+                <p id="total-income">$0.00</p>
+            </div>
+            <div class="metric-card card-expenses">
+                <h3>Gasto Total Insumos</h3>
+                <p id="total-expenses">$0.00</p>
+            </div>
+            <div class="metric-card card-utility">
+                <h3>Utilidad Neta</h3>
+                <p id="net-utility">$0.00</p>
+            </div>
+            <div class="metric-card card-balance">
+                <h3>Dinero en Caja</h3>
+                <p id="current-balance">$0.00</p>
+            </div>
+        </section>
+
+        <main class="main-layout">
+            <section class="form-container">
+                <h2>Log de Producción & Venta</h2>
+                <form id="ledger-form" novalidate>
+                    <div class="form-group">
+                        <label for="type">Operación Financiera</label>
+                        <select id="type" required>
+                            <option value="ingreso">Venta de Figura / Modelo</option>
+                            <option value="egreso">Gasto de Insumos / Producción</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="category-group">
+                        <label for="category">Categoría del Gasto</label>
+                        <select id="category">
+                            <option value="Filamento">Filamento (Filament / CFS)</option>
+                            <option value="Energia">Energía Eléctrica / Horas Máquina</option>
+                            <option value="Post-Procesado">Pinturas / Resinas / Lijas</option>
+                            <option value="Mantenimiento">Repuestos / Boquillas / Camas</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Fecha</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-id">Código STL / SKU</label>
+                            <input type="text" id="item-id" placeholder="Ej: K2-MARVEL-01">
+                        </div>
+                    </div>
+
+                    <div class="form-row metrics-3d">
+                        <div class="form-group">
+                            <label for="weight">Peso Utilizado (Gramos)</label>
+                            <input type="number" id="weight" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="hours">Tiempo Estimado (Horas)</label>
+                            <input type="number" id="hours" value="0" min="0" step="0.1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" id="buy-price-wrapper">
+                            <label for="buy-price">Costo de Fabricación ($)</label>
+                            <input type="number" id="buy-price" value="0" min="0" step="any">
+                        </div>
+                        <div class="form-group">
+                            <label id="main-price-label" for="sell-price">Precio de Venta ($)</label>
+                            <input type="number" id="sell-price" value="0" min="0" step="any" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Especificaciones del Modelo</label>
+                        <textarea id="description" rows="2" placeholder="Ej: Casco Iron Man - Multicolor HyperPLA. 4 colores." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="btn-submit">Registrar Operación</button>
+                </form>
+            </section>
+
+            <section class="table-container">
+                <h2>Historial de Órdenes e Insumos</h2>
+                <div class="table-wrapper">
+                    <table id="ledger-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>SKU/STL</th>
+                                <th>Descripción / Insumo</th>
+                                <th>Gramos / Hrs</th>
+                                <th>Monto</th>
+                                <th>Rendimiento</th>
+                                <th>Tipo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-rows"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <section class="analytics-section">
+            <div class="chart-box">
+                <h2>Evolución de Caja Temporal</h2>
+                <div class="chart-wrapper">
+                    <canvas id="financialChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-box">
+                <h2>Distribución del Gasto en Insumos</h2>
+                <div class="chart-wrapper">
+                    <canvas id="expensesPieChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
